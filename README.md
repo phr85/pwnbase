@@ -1,5 +1,7 @@
 # PwnBase
 
+**[Use PwnBase directly at pwnbase.cybertell.io](https://pwnbase.cybertell.io)** — no installation required.
+
 A self-contained penetration testing documentation platform built for OSCP, PNPT, CPTS, and CTF engagements. Track targets, document findings, manage credentials, and generate professional PDF reports — all from a single HTML file running in your browser. **100% offline — all data stays in your browser's local storage, nothing is ever sent to a server.**
 
 ![Decision Tree](screenshots/01-decision-tree.png)
