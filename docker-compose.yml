@@ -4,6 +4,6 @@ services:
     container_name: pwnbase
     volumes:
       - ./:/usr/share/nginx/html:ro
-    expose:
-      - "80"
+    ports:
+      - "8074:80"
     restart: unless-stopped
