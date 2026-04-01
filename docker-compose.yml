@@ -1,10 +1,7 @@
 services:
   pwnbase:
-    image: nginx:alpine
+    build: .
     container_name: pwnbase
-    volumes:
-      - ./:/usr/share/nginx/html:ro
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
     ports:
       - "18888:80"
     restart: unless-stopped
