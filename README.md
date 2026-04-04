@@ -2,7 +2,7 @@
 
 **[Use PwnBase directly at pwnbase.cybertell.io](https://pwnbase.cybertell.io)** — no installation required.
 
-A self-contained penetration testing documentation platform built for OSCP, PNPT, CPTS, and CTF engagements. Track targets, document findings, manage credentials, and generate professional PDF reports — all from a single HTML file running in your browser. **100% offline — all data stays in your browser's local storage, nothing is ever sent to a server.**
+A self-contained penetration testing documentation platform built for OSCP+, PNPT, CPTS, and CTF engagements. Track targets, document findings, manage credentials, and generate professional PDF reports — all from a single HTML file running in your browser. **100% offline — all data stays in your browser's local storage, nothing is ever sent to a server.**
 
 ![Decision Tree](screenshots/01-decision-tree.png)
 
@@ -58,7 +58,7 @@ Generate username lists from extracted names in multiple formats (first.last, fl
 
 ### Settings & Exam Profiles
 
-Pre-configured profiles for OSCP, PNPT, HTB CPTS, OSEP, and custom exams. Export/import all data as JSON for backup and portability.
+Pre-configured profiles for OSCP+, PNPT, HTB CPTS, OSEP, and custom exams. Export/import all data as JSON for backup and portability.
 
 ![Settings](screenshots/06-settings.png)
 
@@ -126,7 +126,7 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 PwnBase is a penetration testing documentation tool designed exclusively for:
 
 - Authorized penetration testing engagements
-- Certification exams (OSCP, PNPT, CPTS, etc.)
+- Certification exams (OSCP+, PNPT, CPTS, etc.)
 - Lab environments and CTF challenges
 - Security research with proper authorization
 

